@@ -1,0 +1,5 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+
+SET(SRC match.h)
+
+INSTALL(FILES CMakeLists.txt ${SRC} DESTINATION src/extras/libMatch)
