@@ -156,7 +156,7 @@ public:
 
 float KVLD(const Image<float>& I1,const Image<float>& I2,
 	 std::vector<keypoint>& F1, std::vector<keypoint>& F2,const std::vector<Pair>& matches,
-	std::vector<Pair>& matchesFiltered,std::vector<double>& score,libNumerics::matrix<int>& E,std::vector<bool>& valide,KvldParameters& kvldParameters);
+	std::vector<Pair>& matchesFiltered,std::vector<double>& score,libNumerics::matrix<float>& E,std::vector<bool>& valide,KvldParameters& kvldParameters);
 
 
 //====================KVLD interface======================//

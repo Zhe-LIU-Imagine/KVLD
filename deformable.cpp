@@ -40,19 +40,16 @@ int main(int argc,char*argv[]) {
 
   cv::SiftFeatureDetector* detectortype=new  cv::SiftFeatureDetector() ;
   cv::PyramidAdaptedFeatureDetector detector2(detectortype,5);// 5 levels of image scale
-
-  detector2.detect(image1,feat1);
-  detector2.detect(image2,feat2);
-
-  
-  
-  std::cout<< "sift:: 1st image: " << feat1.size() << " keypoints"<<std::endl;
-  std::cout<< "sift:: 2nd image: " << feat2.size() << " keypoints"<<std::endl;
-
   cv::SiftDescriptorExtractor extractor;
   cv::Mat descriptors1,descriptors2;
+
+  detector2.detect(image1,feat1);
   extractor.compute(image1,feat1,descriptors1);
+  std::cout<< "sift:: 1st image: " << feat1.size() << " keypoints"<<std::endl;
+  
+  detector2.detect(image2,feat2);
   extractor.compute(image2,feat2,descriptors2);
+  std::cout<< "sift:: 2nd image: " << feat2.size() << " keypoints"<<std::endl;
 //=============== compute matches using brute force matching ====================//
   std::vector<cv::DMatch> matches;
   bool bSymmetricMatches = false;
@@ -77,8 +74,8 @@ int main(int argc,char*argv[]) {
    std::vector<double> vec_score;
     
   //In order to illustrate the gvld(or vld)-consistant neighbors, the following two parameters has been externalized as inputs of the function KVLD.
-    libNumerics::matrix<int> E = libNumerics::matrix<int>::ones(matches.size(),matches.size())*(-1);
-    // gvld-consistancy matrix, intitialized to -1,  >0, -1=unknow, -2=false  
+    libNumerics::matrix<float> E = libNumerics::matrix<float>::ones(matches.size(),matches.size())*(-1);
+    // gvld-consistancy matrix, intitialized to -1, >0 consistancy value, -1=unknow, -2=false  
     std::vector<bool> valide(matches.size(), true);// indices of match in the initial matches, if true at the end of KVLD, a match is kept.
 
     size_t it_num=0;

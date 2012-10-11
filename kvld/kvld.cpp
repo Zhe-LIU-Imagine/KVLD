@@ -177,7 +177,7 @@ VLD::VLD(const ImageScale& series, T const& P1, T const& P2) : contrast(0.0) {
 
 float KVLD(const Image<float>& I1,const Image<float>& I2,
 	 std::vector<keypoint>& F1, std::vector<keypoint>& F2,const std::vector<Pair>& matches,
-	std::vector<Pair>& matchesFiltered,std::vector<double>& score,libNumerics::matrix<int>& E,std::vector<bool>& valide, KvldParameters& kvldParameters){
+	std::vector<Pair>& matchesFiltered,std::vector<double>& score,libNumerics::matrix<float>& E,std::vector<bool>& valide, KvldParameters& kvldParameters){
 		matchesFiltered.clear();
 		score.clear();
 
@@ -244,6 +244,7 @@ float KVLD(const Image<float>& I1,const Image<float>& I2,
 											if (error<juge){
 												E(it1,it2)=(float)error;
 												E(it2,it1)=(float)error;
+                        //std::cout<<E(it2,it1)<<std::endl;
 											}
 										}
 									}
