@@ -60,7 +60,7 @@ int main(int argc,char*argv[]) {
 
 
 //===============================  KVLD method ==================================//
-	std::cout<<"VLD starts with "<<matches.size()<<" matches"<<std::endl;
+	std::cout<<"K-VLD starts with "<<matches.size()<<" matches"<<std::endl;
     
     std::vector<Pair> matchesFiltered;
    std::vector<double> vec_score;
