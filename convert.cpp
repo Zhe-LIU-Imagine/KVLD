@@ -48,7 +48,7 @@ int Convert_detectors(const  std::vector<cv::KeyPoint>& feat1,std::vector<keypoi
     keypoint key;
     key.x=it->pt.x;
     key.y=it->pt.y;
-    key.angle=it->angle*PI/180;
+    key.angle= -it->angle*PI/180;// opencv inverse the rotation
     key.scale=it->size/2;
     F1.push_back(key);
   }
