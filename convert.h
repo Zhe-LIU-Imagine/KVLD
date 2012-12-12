@@ -22,5 +22,5 @@ int Convert_image(const cv::Mat& In, Image<float> & imag);//convert only gray sc
 int Convert_detectors(const  std::vector<cv::KeyPoint>& feat1,std::vector<keypoint>& F1);//convert openCV detectors to KVLD suitable detectors
 int Convert_matches(const std::vector<cv::DMatch>& matches, std::vector<Pair>& matchesPair);
 
-int read_detectors(const std::string& filename ,  std::vector<cv::KeyPoint>& feat);
-int read_matches(const std::string& filename , std::vector<cv::DMatch>& matches);
+int read_detectors(const std::string& filename ,  std::vector<cv::KeyPoint>& feat);//reading openCV style detectors
+int read_matches(const std::string& filename , std::vector<cv::DMatch>& matches);//reading openCV style matches
