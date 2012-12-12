@@ -83,6 +83,7 @@ int main(int argc,char*argv[]) {
 
 
 //================= write files to output folder ==================//
+    std::cout<<"Please check the output folder for results"<<std::endl;
     writeResult(output,F1, F2, matchesPair, matchesFiltered, vec_score);
 //================= Visualize matching result ====================//
      cv::Mat image1color, image2color, concat;
