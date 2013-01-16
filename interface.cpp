@@ -33,8 +33,8 @@ int main(int argc,char*argv[]) {
   std::string input=std::string(SOURCE_DIR)+"/demo_image/IMG_";
   std::string output=std::string(SOURCE_DIR)+"/demo_output/IMG_"+index+"_";
 
-  image1= cv::imread(input+index+".png", CV_LOAD_IMAGE_GRAYSCALE);
-  image2= cv::imread(input+index+"bis.png", CV_LOAD_IMAGE_GRAYSCALE);
+  image1= cv::imread(input+index+".jpg", CV_LOAD_IMAGE_GRAYSCALE);
+  image2= cv::imread(input+index+"bis.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 
  
 //=============== Read SIFT points =================//

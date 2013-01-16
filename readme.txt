@@ -31,6 +31,9 @@ FOLDERS:
     * (optional)IMG_?_matrix: fundametal or homography matrix
 
 APPLICATIONS
+
+NOTE: two images shold have the same width to be illustrated, otherwise, please desactivate the illustration part.
+
   The code contains three main applications (KVLD_Deformable, KVLD_Calibrate and KVLD_Interface). They come with demonstration using images in demo_image folder. All the outputs are sent to the demo_output folder.
 
 KVLD_Deformable: 
