@@ -25,7 +25,7 @@ the terms of the BSD license (see the COPYING file).
 int main(int argc,char*argv[]) {
   //================= load images ======================//
 	cv::Mat image1, image2;
-  int imageID=2;// index of a pair of images you want to use in folder demo_images
+  int imageID=4;// index of a pair of images you want to use in folder demo_images
   std::string index;
   std::stringstream f;
   f<<imageID;
@@ -33,8 +33,8 @@ int main(int argc,char*argv[]) {
   std::string input=std::string(SOURCE_DIR)+"/demo_image/IMG_";
   std::string output=std::string(SOURCE_DIR)+"/demo_output/IMG_"+index+"_";
 
-  image1= cv::imread(input+index+".jpg", CV_LOAD_IMAGE_GRAYSCALE);
-  image2= cv::imread(input+index+"bis.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+  image1= cv::imread(input+index+".png", CV_LOAD_IMAGE_GRAYSCALE);
+  image2= cv::imread(input+index+"bis.png", CV_LOAD_IMAGE_GRAYSCALE);
 
  
 //=============== Read SIFT points =================//
@@ -81,7 +81,6 @@ int main(int argc,char*argv[]) {
     }
 		std::cout<<"K-VLD filter ends with "<<matchesFiltered.size()<<" selected matches"<<std::endl;
 
-
 //================= write files to output folder ==================//
     std::cout<<"Please check the output folder for results"<<std::endl;
     writeResult(output,F1, F2, matchesPair, matchesFiltered, vec_score);
@@ -89,6 +88,25 @@ int main(int argc,char*argv[]) {
      cv::Mat image1color, image2color, concat;
   image1color= cv::imread(input+index+".jpg", CV_LOAD_IMAGE_COLOR);
   image2color= cv::imread(input+index+"bis.jpg", CV_LOAD_IMAGE_COLOR);
+
+  //  for (int it1=0; it1<matchesPair.size()-1;it1++){
+  //  for (int it2=it1+1; it2<matchesPair.size();it2++){
+  //    if (valide[it1] && valide[it2] && E(it1,it2)>=0){
+
+  //      cv::KeyPoint l1 = feat1[matchesPair[it1].first];
+  //      cv::KeyPoint l2 = feat1[matchesPair[it2].first];
+
+  //      cv::KeyPoint r1 = feat2[matchesPair[it1].second];
+  //      cv::KeyPoint r2 = feat2[matchesPair[it2].second];
+
+  //      //cv::line(image1color,l1.pt, l2.pt,cv::Scalar(255,0,255),2);
+  //      cv::circle(image1color,l1.pt,5,cv::Scalar(0,255,0));
+  //    }
+  //  }
+  //}
+  //cv::imwrite(output+"output.png",image1color);
+
+
 
    cv::vconcat(image1color, image2color,concat);
    	for(  std::vector<cv::DMatch>::const_iterator ptr = matches.begin(); ptr != matches.end(); ++ptr)

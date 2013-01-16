@@ -71,7 +71,7 @@ int read_detectors(const std::string& filename ,  std::vector<cv::KeyPoint>& fea
   for (int i=0; i<size;i++){
     float x, y, angle, scale;
     file>>x>>y>>scale>>angle;   
-    cv::KeyPoint key(x,y,scale*2,angle*180/PI);
+    cv::KeyPoint key(x,y,scale*2,90-angle*180/PI);
     feat.push_back(key);
   }
 }
