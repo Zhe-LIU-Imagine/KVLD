@@ -34,9 +34,9 @@ the terms of the BSD license (see the COPYING file).
 
 //===== initialize parameters for a KVLD process ====//
 // inlierRate: the minimum rate down to which the KVLD should be reprocessed with a lower number of inlierRate, initially set to 0.04
-// K: the minumum number of gvld-consistant (or vld-consistant) neighbors to select a match as correct one 
+// K: the minumum number of gvld-consistent (or vld-consistent) neighbors to select a match as correct one 
 // geometry: if true, KVLD will also take geometric verification into account. c.f. paper
-//           if false, KVLD execute a pure phtometric verification
+//           if false, KVLD execute a pure photometric verification
 struct KvldParameters{
   float inlierRate;
   size_t K;
@@ -45,11 +45,11 @@ struct KvldParameters{
 };
 
 //====== Pyramide of scale images ======//
-// elements as angles[0] and magnitudes[0] presents oriantations and gradient normes of the original scale (biggest), and the following elements 
+// elements as angles[0] and magnitudes[0] presents orientations and gradient norms of the original scale (biggest), and the following elements 
 // are scaled down by a step of sqrt(2.0) in size
 //
-// angles: strore oriantations of pixels of each scale image into a vector of images, which varies from 0 to 2*PI for each pixel 
-// magnitudes: strore gradient normes of pixels of each scale image into a vector of images  
+// angles: store orientations of pixels of each scale image into a vector of images, which varies from 0 to 2*PI for each pixel 
+// magnitudes: store gradient normes of pixels of each scale image into a vector of images  
 struct ImageScale{
 	std::vector<Image<float> > angles;
 	std::vector<Image<float> > magnitudes;
@@ -143,8 +143,8 @@ public:
 //
 //matchesFiltered: the output list of matches filled by KVLD processe.(it will be cleared to empty at the beginning of KVLD).
 //
-//score: list of score for output matches. If geometric verification is set to true, each element presents the geometric consistancy score of the corresponding match with its neighbor matches
-//        otherwise, it presents the average photometric consistancy score with its neighbor matches.
+//score: list of score for output matches. If geometric verification is set to true, each element presents the geometric consistency score of the corresponding match with its neighbor matches
+//        otherwise, it presents the average photometric consistency score with its neighbor matches.
 //
 //E: gvld(or vld)-consistency matrix, for illustration reason, it has been externalized as an input of KVLD. it should be initialized to be a matches.size*matche.sizes table with all equal to -1 
 //   e.g.  libNumerics::matrix<int> E = libNumerics::matrix<int>::ones(matchesPair.size(),matchesPair.size())*(-1);

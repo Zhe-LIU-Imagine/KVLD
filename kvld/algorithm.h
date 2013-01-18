@@ -84,10 +84,10 @@ struct FCrit {
 
 //===================================== intergral image ====================================//
 //It is used to efficiently constructe the pyramide of scale images in KVLD
-struct IntergralImages{
+struct IntegralImages{
 	Image<double> map;
 
-	IntergralImages(const Image<float>& I);
+	IntegralImages(const Image<float>& I);
   
   inline double operator()(double x1, double y1,double x2,double y2)const{
 		return get(x2,y2)-get(x1,y2)-get(x2,y1)+get(x1,y1);
@@ -134,7 +134,7 @@ FCrit Find_Model(const Image<float>& I1,const Image<float>& I2,
 
 //=============================IO interface, convertion of object types======================//
 
-std::ofstream& writDetector(std::ofstream& out, const keypoint& vect);
+std::ofstream& writeDetector(std::ofstream& out, const keypoint& vect);
 std::ifstream& readDetector(std::ifstream& in,keypoint& point);
 //======================================elemetuary operations================================//
 template <typename T>
@@ -208,7 +208,7 @@ inline void normalize_weight(ARRAY & weight){
 }
 
 template<typename T>
-inline float consistant(const T& a1,const T& a2,const T& b1,const T& b2){
+inline float consistent(const T& a1,const T& a2,const T& b1,const T& b2){
 	float ax=float(a1.x-a2.x);
 	float ay=float(a1.y-a2.y);
 	float bx=float(b1.x-b2.x);
