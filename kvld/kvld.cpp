@@ -15,7 +15,7 @@ the terms of the BSD license (see the COPYING file).
 #include <numeric>
 
 ImageScale::ImageScale(const Image<float>& I,double r){
-  IntergralImages inter(I);
+  IntegralImages inter(I);
   radius_size=r;
   step=sqrt(2.0);
   int size= std::max(I.Width(),I.Height());
@@ -115,7 +115,7 @@ VLD::VLD(const ImageScale& series, T const& P1, T const& P2) : contrast(0.0) {
   int w=m.Width() ,h=m.Height();
 	float r=float(radius/ratio);//series.radius_size;
 	float sigma2=r*r;
-	//======calculating the descriptor=====//
+	//======Computing the descriptors=====//
 
 	for (int i=0;i<dimension; i++){
 		double statistic[binNum];
@@ -220,7 +220,7 @@ float KVLD(const Image<float>& I1,const Image<float>& I2,
 
       fill(scoretable.begin(), scoretable.end(), 0.0);
       fill(result.begin(), result.end(), 0);
-      //========substep 1: search for each match its neighbors and verify if they are gvld-consistant ============//
+      //========substep 1: search for each match its neighbors and verify if they are gvld-consistent ============//
 			for (int it1=0; it1<size-1;it1++){
 				if (valide[it1]){
 					size_t a1=matches[it1].first, b1=matches[it1].second;
@@ -235,7 +235,7 @@ float KVLD(const Image<float>& I1,const Image<float>& I2,
 									if(E(it1,it2)==-1){//update E if unknow
 										E(it1,it2)=-2; E(it2,it1)=-2;
                   
-										if(!kvldParameters.geometry || consistant(F1[a1],F1[a2],F2[b1],F2[b2])<distance_thres){
+										if(!kvldParameters.geometry || consistent(F1[a1],F1[a2],F2[b1],F2[b2])<distance_thres){
 											VLD vld1(Chaine1,F1[a1],F1[a2]);
 											VLD vld2(Chaine2,F2[b1],F2[b2]);
                       //vld1.test();
@@ -262,11 +262,11 @@ float KVLD(const Image<float>& I1,const Image<float>& I2,
 				}
 			}
 
-			//========substep 2: remove false matches by K gvld-consistancy criteria ============//
+			//========substep 2: remove false matches by K gvld-consistency criteria ============//
 			for (int it=0; it<size;it++){
 				if (valide[it] && result[it]<kvldParameters.K)  {valide[it]=false;change=true;}
 			}
-			//========substep 3: remove multiple matches to a same point by keeping the one with the best average gvld-consistancy score ============//
+			//========substep 3: remove multiple matches to a same point by keeping the one with the best average gvld-consistency score ============//
 			if(uniqueMatch)
       for (int it1=0; it1<size-1;it1++)
 				if (valide[it1]){
@@ -297,7 +297,7 @@ float KVLD(const Image<float>& I1,const Image<float>& I2,
 							}
 						}
 				}
-				//========substep 4: if geometric verification is set, re-score matches by geometric-consistancy, and remove poorly scored ones ============================//
+				//========substep 4: if geometric verification is set, re-score matches by geometric-consistency, and remove poorly scored ones ============================//
 				if (uniqueMatch && kvldParameters.geometry)
         {
 					for (int i=0;i<size;i++) scoretable[i]=0;
@@ -321,7 +321,7 @@ float KVLD(const Image<float>& I1,const Image<float>& I2,
 										&& (dist1(a1,a2)>min_dist && dist2(b1,b2)>min_dist)
 									 )
                   {
-											float d=consistant(F1[a1],F1[a2],F2[b1],F2[b2]);
+											float d=consistent(F1[a1],F1[a2],F2[b1],F2[b2]);
 											scoretable[it1]+=d;
 											index+=1;
 											if (d<distance_thres)
@@ -359,7 +359,7 @@ void writeResult(const std::string output,const std::vector<keypoint>& F1,const 
     
     feature1<<F1.size()<<std::endl;
     for (std::vector<keypoint>::const_iterator it=F1.begin(); it!=F1.end();it++){
-        writDetector(feature1,(*it));
+        writeDetector(feature1,(*it));
     }
     feature1.close();
 
@@ -368,7 +368,7 @@ void writeResult(const std::string output,const std::vector<keypoint>& F1,const 
       std::cout<<"error while writing Features2.txt"<<std::endl;
     feature2<<F2.size()<<std::endl;
     for (std::vector<keypoint>::const_iterator it=F2.begin(); it!=F2.end();it++){
-        writDetector(feature2,(*it));
+        writeDetector(feature2,(*it));
     }
     feature2.close();
 

@@ -15,7 +15,7 @@ the terms of the BSD license (see the COPYING file).
 
 
 //template<typename T>
-IntergralImages::IntergralImages(const Image<float>& I){
+IntegralImages::IntegralImages(const Image<float>& I){
 		map.Resize(I.Width()+1,I.Height()+1);
 		map.fill(0);
 		for (int y=0;y<I.Height();y++)
@@ -156,7 +156,7 @@ static void rm_duplicates(T& m) {
 
 //=============================IO interface, convertion of object types======================//
 
-std::ofstream& writDetector(std::ofstream& out, const keypoint& feature){
+std::ofstream& writeDetector(std::ofstream& out, const keypoint& feature){
   out<<feature.x<<" "<<feature.y<<" "<<feature.scale<<" "<<feature.angle<<std::endl;
   /*for(int i=0;i<128;i++)  
     out<<feature.vec[i]<<" ";
