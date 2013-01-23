@@ -67,7 +67,7 @@ int main(int argc,char*argv[]) {
     
   //In order to illustrate the gvld(or vld)-consistant neighbors, the following two parameters has been externalized as inputs of the function KVLD.
     libNumerics::matrix<float> E = libNumerics::matrix<float>::ones(matches.size(),matches.size())*(-1);
-    // gvld-consistancy matrix, intitialized to -1,  >0 consistancy value, -1=unknow, -2=false  
+    // gvld-consistency matrix, intitialized to -1,  >0 consistency value, -1=unknow, -2=false  
     std::vector<bool> valide(matches.size(), true);// indices of match in the initial matches, if true at the end of KVLD, a match is kept.
 
     size_t it_num=0;
