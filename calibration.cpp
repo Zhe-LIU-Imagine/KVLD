@@ -40,7 +40,7 @@ int main(int argc,char*argv[]) {
   std::vector<cv::KeyPoint> feat1,feat2;
 
   cv::SiftFeatureDetector* detectortype=new  cv::SiftFeatureDetector() ;
-  cv::PyramidAdaptedFeatureDetector detector2(detectortype,5);// 5 levels of image scale
+  cv::PyramidAdaptedFeatureDetector detector2(detectortype,3);// 3 levels of image scale
   cv::SiftDescriptorExtractor extractor;
   cv::Mat descriptors1,descriptors2;
 

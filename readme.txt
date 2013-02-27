@@ -8,6 +8,8 @@ Z,Liu and R,Marlet. Virtual Line Descriptor and Semi-Local Matching Method for R
 
   KVLD is distributed under the BSD license (see the COPYING file).
 
+PERFORMANCE WARMING: If you use openCV library, please download the last version from GitHub, for openCV of version earlier than 2.4, descriptors' orientation may be reversed! (Bug in openCV 2.3) An easy way to test is to process an image with its rotated projection.
+
 INSTALLING
   This implementation is on C++ and depends on openCV library, whose installation guild is available online. You will need Cmake 2.6 or later to compile the program.
   However the kvld library is independent of openCV, and if you develop your own applications using kvld, please 

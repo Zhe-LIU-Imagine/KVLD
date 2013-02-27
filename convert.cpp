@@ -48,7 +48,7 @@ int Convert_detectors(const  std::vector<cv::KeyPoint>& feat1,std::vector<keypoi
     keypoint key;
     key.x=it->pt.x;
     key.y=it->pt.y;
-    key.angle= (90.0-it->angle)*PI/180;// opencv inverse the rotation
+    key.angle= (it->angle)*PI/180;// opencv inverse the rotation in lower version of 2.4
     key.scale=it->size/2;
     F1.push_back(key);
   }
@@ -71,7 +71,7 @@ int read_detectors(const std::string& filename ,  std::vector<cv::KeyPoint>& fea
   for (int i=0; i<size;i++){
     float x, y, angle, scale;
     file>>x>>y>>scale>>angle;   
-    cv::KeyPoint key(x,y,scale*2,90-angle*180/PI);
+    cv::KeyPoint key(x,y,scale*2,angle*180/PI);
     feat.push_back(key);
   }
 }
