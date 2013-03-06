@@ -34,6 +34,7 @@ endif (UNIX)
 # don't forget to also commande ${OpenCV_LIBS} further.
 FIND_PACKAGE( OpenCV REQUIRED )
 
+
 #find Orsa and KVLD librarys
 ADD_DEFINITIONS(-DSOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
 ADD_SUBDIRECTORY(OrsaHomography)
@@ -42,6 +43,7 @@ ADD_SUBDIRECTORY(kvld)
 INCLUDE_DIRECTORIES(
 ./OrsaHomography/
 ./OrsaHomography/demo/libImage
+$ENV{OPENCV_DIR}/install/include/opencv
 )
 
 

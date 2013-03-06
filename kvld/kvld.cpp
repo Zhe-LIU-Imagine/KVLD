@@ -13,6 +13,7 @@ the terms of the BSD license (see the COPYING file).
 #include "kvld.h"
 #include <functional>
 #include <numeric>
+#include <map>
 
 ImageScale::ImageScale(const Image<float>& I,double r){
   IntegralImages inter(I);
@@ -176,41 +177,39 @@ VLD::VLD(const ImageScale& series, T const& P1, T const& P2) : contrast(0.0) {
 }
 
 float KVLD(const Image<float>& I1,const Image<float>& I2,
-	 std::vector<keypoint>& F1, std::vector<keypoint>& F2,const std::vector<Pair>& matches,
+	std::vector<keypoint>& F1, std::vector<keypoint>& F2,const std::vector<Pair>& matches,
 	std::vector<Pair>& matchesFiltered,std::vector<double>& score,libNumerics::matrix<float>& E,std::vector<bool>& valide, KvldParameters& kvldParameters){
 		matchesFiltered.clear();
 		score.clear();
 
 		ImageScale Chaine1(I1);
 		ImageScale Chaine2(I2);
-      
 
 		std::cout<<"Image scale-space complete..."<<std::endl;
 
-    float range1=getRange(I1,std::min(F1.size(),matches.size()),kvldParameters.inlierRate);
+		float range1=getRange(I1,std::min(F1.size(),matches.size()),kvldParameters.inlierRate);
 		float range2=getRange(I2,std::min(F2.size(),matches.size()),kvldParameters.inlierRate);
 
 		size_t size=matches.size();
 
-		//================distance map construction, for use of selecting neighbors===============//
-		std::cout<<"computing distance maps"<<std::endl;
-		libNumerics::matrix<float> dist1=libNumerics::matrix<float>::zeros(F1.size(), F1.size());
-		libNumerics::matrix<float> dist2=libNumerics::matrix<float>::zeros(F2.size(), F2.size());
-		
+		////================distance map construction, for use of selecting neighbors===============//
+		//std::cout<<"computing distance maps"<<std::endl;
+		//libNumerics::matrix<float> dist1=libNumerics::matrix<float>::zeros(F1.size(), F1.size());
+		//libNumerics::matrix<float> dist2=libNumerics::matrix<float>::zeros(F2.size(), F2.size());
 
-    for (int a1=0; a1<F1.size();++a1)
-      for (int a2=0; a2<F1.size();++a2)
-        dist1(a1,a2)=point_distance(F1[a1],F1[a2]);
+		//  for (int a1=0; a1<F1.size();++a1)
+		//    for (int a2=0; a2<F1.size();++a2)
+		//      dist1(a1,a2)=point_distance(F1[a1],F1[a2]);
 
-    for (int b1=0; b1<F2.size();++b1)
-      for (int b2=0; b2<F2.size();++b2)
-        dist2(b1,b2)=point_distance(F2[b1],F2[b2]);
+		//  for (int b1=0; b1<F2.size();++b1)
+		//    for (int b2=0; b2<F2.size();++b2)
+		//      dist2(b1,b2)=point_distance(F2[b1],F2[b2]);
 
-    fill(valide.begin(),valide.end(), true);
-    std::vector<double> scoretable(size, 0);
-    std::vector<size_t> result(size, 0);
+		fill(valide.begin(),valide.end(), true);
+		std::vector<double> scoretable(size, 0);
+		std::vector<size_t> result(size, 0);
 
-//============main iteration for match verification==========//
+		//============main iteration for match verification==========//
 		std::cout<<"main iteration";
 		bool change=true, initial=true;
 
@@ -218,33 +217,34 @@ float KVLD(const Image<float>& I1,const Image<float>& I2,
 			std::cout<<".";
 			change=false;
 
-      fill(scoretable.begin(), scoretable.end(), 0.0);
-      fill(result.begin(), result.end(), 0);
-      //========substep 1: search for each match its neighbors and verify if they are gvld-consistent ============//
+			fill(scoretable.begin(), scoretable.end(), 0.0);
+			fill(result.begin(), result.end(), 0);
+			//========substep 1: search for each match its neighbors and verify if they are gvld-consistent ============//
 			for (int it1=0; it1<size-1;it1++){
 				if (valide[it1]){
 					size_t a1=matches[it1].first, b1=matches[it1].second;
 
-					for (int it2=it1+1; it2<size;it2++)
+					for (int it2=it1+1; it2<size;it2++){
 						if (valide[it2]){
 							size_t a2=matches[it2].first, b2=matches[it2].second;
-
-							if ( dist1(a1,a2)>min_dist && dist2(b1,b2)>min_dist
-								&& (dist1(a1,a2)<range1 || dist2(b1,b2)<range2)){
+							float dist1=point_distance(F1[a1],F1[a2]);
+							float dist2=point_distance(F2[b1],F2[b2]);
+							if ( dist1>min_dist && dist2>min_dist
+								&& (dist1<range1 || dist2<range2)){
 
 									if(E(it1,it2)==-1){//update E if unknow
 										E(it1,it2)=-2; E(it2,it1)=-2;
-                  
+
 										if(!kvldParameters.geometry || consistent(F1[a1],F1[a2],F2[b1],F2[b2])<distance_thres){
 											VLD vld1(Chaine1,F1[a1],F1[a2]);
 											VLD vld2(Chaine2,F2[b1],F2[b2]);
-                      //vld1.test();
+											//vld1.test();
 											double error=vld1.difference(vld2);
-                      //std::cout<<std::endl<<it1<<" "<<it2<<" "<<dist1(a1,a2)<<" "<< dist2(b1,b2)<<" "<<error<<std::endl;
+											//std::cout<<std::endl<<it1<<" "<<it2<<" "<<dist1(a1,a2)<<" "<< dist2(b1,b2)<<" "<<error<<std::endl;
 											if (error<juge){
 												E(it1,it2)=(float)error;
 												E(it2,it1)=(float)error;
-                        //std::cout<<E(it2,it1)<<std::endl;
+												//std::cout<<E(it2,it1)<<std::endl;
 											}
 										}
 									}
@@ -259,6 +259,7 @@ float KVLD(const Image<float>& I1,const Image<float>& I2,
 									}
 							}
 						}
+					}
 				}
 			}
 
@@ -267,87 +268,87 @@ float KVLD(const Image<float>& I1,const Image<float>& I2,
 				if (valide[it] && result[it]<kvldParameters.K)  {valide[it]=false;change=true;}
 			}
 			//========substep 3: remove multiple matches to a same point by keeping the one with the best average gvld-consistency score ============//
-			if(uniqueMatch)
-      for (int it1=0; it1<size-1;it1++)
-				if (valide[it1]){
-					size_t a1=matches[it1].first, b1=matches[it1].second;
+			if(uniqueMatch){
+				for (int it1=0; it1<size-1;it1++){
+					if (valide[it1]){
+						size_t a1=matches[it1].first, b1=matches[it1].second;
 
-					for (int it2=it1+1; it2<size;it2++)
-						if (valide[it2]){
-							size_t a2=matches[it2].first, b2=matches[it2].second;
+						for (int it2=it1+1; it2<size;it2++)
+							if (valide[it2]){
+								size_t a2=matches[it2].first, b2=matches[it2].second;
 
-							if(a1==a2||b1==b2
-								||(F1[a1].x==F1[a2].x && F1[a1].y==F1[a2].y && (F2[b1].x!=F2[b2].x || F2[b1].y!=F2[b2].y))
-								||((F1[a1].x!=F1[a2].x || F1[a1].y!=F1[a2].y ) && F2[b1].x==F2[b2].x && F2[b1].y==F2[b2].y)
-								){
-									//cardinal comparison
-									if(result[it1]>result[it2]){
-										valide[it2]=false;change=true;
-									}else if(result[it1]<result[it2]){
-										valide[it1]=false;change=true;
-
-									}else if(result[it1]==result[it2]){
-										//score comparison
-										if (scoretable[it1]>scoretable[it2]){
-											valide[it1]=false;change=true;
-										}else if (scoretable[it1]<scoretable[it2]){
+								if(a1==a2||b1==b2
+									||(F1[a1].x==F1[a2].x && F1[a1].y==F1[a2].y && (F2[b1].x!=F2[b2].x || F2[b1].y!=F2[b2].y))
+									||((F1[a1].x!=F1[a2].x || F1[a1].y!=F1[a2].y ) && F2[b1].x==F2[b2].x && F2[b1].y==F2[b2].y)
+									){
+										//cardinal comparison
+										if(result[it1]>result[it2]){
 											valide[it2]=false;change=true;
+										}else if(result[it1]<result[it2]){
+											valide[it1]=false;change=true;
+
+										}else if(result[it1]==result[it2]){
+											//score comparison
+											if (scoretable[it1]>scoretable[it2]){
+												valide[it1]=false;change=true;
+											}else if (scoretable[it1]<scoretable[it2]){
+												valide[it2]=false;change=true;
+											}
 										}
-									}
-							}
-						}
-				}
-				//========substep 4: if geometric verification is set, re-score matches by geometric-consistency, and remove poorly scored ones ============================//
-				if (uniqueMatch && kvldParameters.geometry)
-        {
-					for (int i=0;i<size;i++) scoretable[i]=0;
-					
-          std::vector<bool> switching;
-					for (int i=0;i<size;i++) switching.push_back(false);
-
-					for (int it1=0; it1<size;it1++)
-						if (valide[it1])
-            {
-							size_t a1=matches[it1].first, b1=matches[it1].second;
-							float index=0.0f;
-							int good_index=0;
-							for (int it2=0; it2<size;it2++)
-              {
-								if (it1!=it2 && valide[it2])
-                {
-									size_t a2=matches[it2].first, b2=matches[it2].second;
-
-									if ((dist1(a1,a2)<range1 || dist2(b1,b2)<range2)
-										&& (dist1(a1,a2)>min_dist && dist2(b1,b2)>min_dist)
-									 )
-                  {
-											float d=consistent(F1[a1],F1[a2],F2[b1],F2[b2]);
-											scoretable[it1]+=d;
-											index+=1;
-											if (d<distance_thres)
-												good_index++;
-									}
 								}
 							}
-							scoretable[it1]/=index;
-							if (good_index<0.3f*float(index) && scoretable[it1]>1.2){switching[it1]=true;change=true;}
-						}
-
-						for (int it1=0; it1<size;it1++)
-							if (switching[it1])
-								valide[it1]=false;
+					}
 				}
+			}
+			//========substep 4: if geometric verification is set, re-score matches by geometric-consistency, and remove poorly scored ones ============================//
+			if (uniqueMatch && kvldParameters.geometry){
+				for (int i=0;i<size;i++) scoretable[i]=0;
+
+				std::vector<bool> switching;
+				for (int i=0;i<size;i++) switching.push_back(false);
+
+				for (int it1=0; it1<size;it1++){
+					if (valide[it1]) {
+						size_t a1=matches[it1].first, b1=matches[it1].second;
+						float index=0.0f;
+						int good_index=0;
+						for (int it2=0; it2<size;it2++){
+							if (it1!=it2 && valide[it2]){
+								size_t a2=matches[it2].first, b2=matches[it2].second;
+								float dist1=point_distance(F1[a1],F1[a2]);
+								float dist2=point_distance(F2[b1],F2[b2]);
+								if ((dist1<range1 || dist2<range2)
+									&& (dist1>min_dist && dist2>min_dist)
+									){
+										float d=consistent(F1[a1],F1[a2],F2[b1],F2[b2]);
+										scoretable[it1]+=d;
+										index+=1;
+										if (d<distance_thres)
+											good_index++;
+								}
+							}
+						}
+						scoretable[it1]/=index;
+						if (good_index<0.3f*float(index) && scoretable[it1]>1.2){switching[it1]=true;change=true;}
+					}
+				}
+				for (int it1=0; it1<size;it1++){
+					if (switching[it1])
+						valide[it1]=false;
+				}
+			}
 		}
-    std::cout<<std::endl;
+		std::cout<<std::endl;
 
 
-//=============== generating output list ===================//
-		for (int it=0; it<size;it++)
+		//=============== generating output list ===================//
+		for (int it=0; it<size;it++){
 			if (valide[it]){
 				matchesFiltered.push_back(matches[it]);
 				score.push_back(scoretable[it]);
 			}
-			return float(matchesFiltered.size())/matches.size();
+		}
+		return float(matchesFiltered.size())/matches.size();
 }
 
 void writeResult(const std::string output,const std::vector<keypoint>& F1,const std::vector<keypoint>& F2,const std::vector<Pair>& matches,
