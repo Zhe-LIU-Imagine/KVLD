@@ -2,13 +2,15 @@
                Zhe Liu and Pierre Moulon
 
 ABOUT
-  The KVLD open source library implements the Kth virtual line descriptor matching method introduced in the paper: 
+  The KVLD open source library implements the Kth virtual line descriptor matching method introduced in the paper with minor modifications: 
 
 Z,Liu and R,Marlet. Virtual Line Descriptor and Semi-Local Matching Method for Reliable Feature Correspondence in BMVC 2012
 
   KVLD is distributed under the BSD license (see the COPYING file).
 
-PERFORMANCE WARMING: If you use openCV library, please download the last version from GitHub, for openCV of version earlier than 2.4, descriptors' orientation may be reversed! (Bug in openCV 2.3) An easy way to test is to process an image with its rotated projection.
+PERFORMANCE WARMING: 
+  1. If you use openCV library, please download the last version from GitHub, for openCV of version earlier than 2.4, descriptors' orientation may be reversed! (Bug in openCV 2.3) An easy way to test is to process an image with its rotated projection.
+  2. We use integral image instead of Gaussian blurring process to calculate gradients, which is less discriminant but is easier and faster in practice 
 
 INSTALLING
   This implementation is on C++ and depends on openCV library, whose installation guild is available online. You will need Cmake 2.6 or later to compile the program.
