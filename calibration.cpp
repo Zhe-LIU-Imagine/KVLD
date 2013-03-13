@@ -22,7 +22,7 @@ the terms of the BSD license (see the COPYING file).
 #include <highgui.h>
 #include "opencv2/nonfree/features2d.hpp" 
 
-
+const float sift_matching_criterion=0.98;
 int main(int argc,char*argv[]) {
 	//================= load images ======================//
 	cv::Mat image1, image2;
@@ -56,7 +56,14 @@ int main(int argc,char*argv[]) {
 	std::vector<cv::DMatch> matches;
 	bool bSymmetricMatches = false;
 	cv::BFMatcher matcher(cv::NORM_L2, bSymmetricMatches);
-	matcher.match(descriptors1,descriptors2,matches);
+	//matcher.match(descriptors1,descriptors2,matches);
+
+	std::vector<std::vector<cv::DMatch>> knnmatches;
+	matcher.knnMatch(descriptors1,descriptors2,knnmatches,2);
+	for (std::vector<std::vector<cv::DMatch>>::const_iterator it=knnmatches.begin();it!=knnmatches.end();it++){
+		if (it->at(0).distance<sift_matching_criterion*it->at(1).distance) 
+			matches.push_back((*it)[0]);
+	}
 
 	//=============== convert openCV sturctures to KVLD recognized elements
 	Image<float> If1, If2;
@@ -96,7 +103,7 @@ int main(int argc,char*argv[]) {
 	FCrit crit=Find_Model(If1,If2,F1,F2,matchesFiltered,precision,homography);
 
 	//================= write files to output folder ==================//
-	std::cout<<"Please check the output folder for results"<<std::endl;
+	std::cout<<"Writing results to the output folder..."<<std::endl;
 	std::string output=std::string(SOURCE_DIR)+"/demo_output/IMG_"+index+"_";
 	writeResult(output,F1, F2, matchesPair, matchesFiltered, vec_score);
 
@@ -153,5 +160,6 @@ int main(int argc,char*argv[]) {
 		}
 	}
 	cv::imwrite(output+"kvld_filtered.png",concat);
+	std::cout<<"Please check the output folder for results"<<std::endl;
 	return 0;
 }
