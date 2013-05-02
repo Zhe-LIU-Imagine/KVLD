@@ -36,6 +36,9 @@ int main(int argc,char*argv[]) {
   image1= cv::imread(input+index+".jpg", CV_LOAD_IMAGE_GRAYSCALE);
   image2= cv::imread(input+index+"bis.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 
+  cv::Mat image1color, image2color, concat;//for visualization
+  image1color= cv::imread(input+index+".jpg", CV_LOAD_IMAGE_COLOR);
+  image2color= cv::imread(input+index+"bis.jpg", CV_LOAD_IMAGE_COLOR);
  
 //=============== Read SIFT points =================//
   std::cout<<"Loading SIFT features"<<std::endl;
@@ -85,9 +88,7 @@ int main(int argc,char*argv[]) {
     std::cout<<"Please check the output folder for results"<<std::endl;
     writeResult(output,F1, F2, matchesPair, matchesFiltered, vec_score);
 //================= Visualize matching result ====================//
-     cv::Mat image1color, image2color, concat;
-  image1color= cv::imread(input+index+".jpg", CV_LOAD_IMAGE_COLOR);
-  image2color= cv::imread(input+index+"bis.jpg", CV_LOAD_IMAGE_COLOR);
+
 
   //  for (int it1=0; it1<matchesPair.size()-1;it1++){
   //  for (int it2=it1+1; it2<matchesPair.size();it2++){

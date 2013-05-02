@@ -35,6 +35,10 @@ int main(int argc,char*argv[]) {
 	image1= cv::imread(input+index+".jpg", CV_LOAD_IMAGE_GRAYSCALE);
 	image2= cv::imread(input+index+"bis.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 
+    cv::Mat image1color, image2color, concat;//for visualization
+	image1color= cv::imread(input+index+".jpg", CV_LOAD_IMAGE_COLOR);
+	image2color= cv::imread(input+index+"bis.jpg", CV_LOAD_IMAGE_COLOR);
+
 	//=============== compute SIFT points =================//
 	std::cout<<"Extracting SIFT features"<<std::endl;
 	std::vector<cv::KeyPoint> feat1,feat2;
@@ -111,10 +115,6 @@ int main(int argc,char*argv[]) {
 	matrix<<crit.getMatrix();
 	matrix.close();
 	//================= Visualize matching result ====================//
-	cv::Mat image1color, image2color, concat;
-	image1color= cv::imread(input+index+".jpg", CV_LOAD_IMAGE_COLOR);
-	image2color= cv::imread(input+index+"bis.jpg", CV_LOAD_IMAGE_COLOR);
-
 	cv::vconcat(image1color, image2color,concat);
 	for(  std::vector<cv::DMatch>::const_iterator ptr = matches.begin(); ptr != matches.end(); ++ptr){
 		cv::KeyPoint start = feat1[ptr->queryIdx]; 
