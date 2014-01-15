@@ -40,13 +40,13 @@ static void display_stats(const std::vector<Match>& vec_matchings,
        std::vector<size_t>::const_iterator it=vec_inliers.begin();
        for(; it!=vec_inliers.end(); ++it) {
          const Match& m=vec_matchings[*it];
-         Matrix x(1,3);
-         x(0,0)=m.x1;
-         x(0,1)=m.y1;
-         x(0,2)=1.0;
+         Matrix x(3,1);
+         x(0)=m.x1;
+         x(1)=m.y1;
+         x(2)=1.0;
          x = F*x;
-         x /= x(0,2);
-         double e = (m.x2-x(0,0))*(m.x2-x(0,0)) + (m.y2-x(0,1))*(m.y2-x(0,1));
+         x /= x(2);
+         double e = (m.x2-x(0))*(m.x2-x(0)) + (m.y2-x(1))*(m.y2-x(1));
          l2 += e;
          if(linf < e)
            linf = e;
@@ -94,8 +94,7 @@ bool ORSA(const std::vector<Match>& vec_matchings, int w1,int h1, int w2,int h2,
 
   std::auto_ptr< orsa::OrsaModel > modelEstimator;
   if(homo){
-	  modelEstimator = std::auto_ptr< orsa::OrsaModel >(
-		  new orsa::HomographyModel(xA, w1, h1, xB, w2, h2, true));
+	  modelEstimator = std::auto_ptr< orsa::HomographyModel  >(new orsa::HomographyModel(xA, w1, h1, xB, w2, h2, true));
   }else{
 	  //Fundamental
 	  modelEstimator = std::auto_ptr< orsa::FundamentalModel >(new orsa::FundamentalModel(xA, w1, h1, xB, w2, h2, true));
