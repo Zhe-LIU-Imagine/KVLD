@@ -12,8 +12,6 @@ the terms of the BSD license (see the COPYING file).
 
 #include "algorithm.h"
 
-
-
 //template<typename T>
 IntegralImages::IntegralImages(const Image<float>& I){
 		map.Resize(I.Width()+1,I.Height()+1);

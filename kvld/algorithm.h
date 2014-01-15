@@ -9,6 +9,9 @@ All rights reserved.
 This file is part of the KVLD library and is made available under
 the terms of the BSD license (see the COPYING file).
 */
+#ifndef KVLD_ALGORITHM_H
+#define KVLD_ALGORITHM_H
+
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -235,3 +238,5 @@ inline float consistent(const T& a1,const T& a2,const T& b1,const T& b2){
 	return d;
 }
 float getRange(const Image<float>& I,int a,const float p);
+
+#endif //KVLD_ALGORITHM_H

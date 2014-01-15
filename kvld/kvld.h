@@ -11,7 +11,9 @@ This file is part of the KVLD library and is made available under
 the terms of the BSD license (see the COPYING file).
 */
 
-#pragma once
+#ifndef KVLD_H
+#define KVLD_H
+
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -161,3 +163,5 @@ float KVLD(const Image<float>& I1,const Image<float>& I2,
 //====================KVLD interface======================//
 void writeResult(const std::string output,const std::vector<keypoint>& F1,const std::vector<keypoint>& F2,const std::vector<Pair>& matches,
 		   const std::vector<Pair>& matchesFiltered,const std::vector<double>& score);
+
+#endif //KVLD_H
