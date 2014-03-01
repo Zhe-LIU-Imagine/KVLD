@@ -46,8 +46,8 @@ int Convert_detectors(const  std::vector<cv::KeyPoint>& feat1,std::vector<keypoi
   F1.clear();
   for (std::vector<cv::KeyPoint>::const_iterator it=feat1.begin();it!=feat1.end();it++){
     keypoint key;
-    key.x=it->pt.x;
-    key.y=it->pt.y;
+    key.x=it->pt.x+0.5;// opencv 2.4.8 mark the first pixel as (0,0) which should be (0.5,0.5)  precisely
+    key.y=it->pt.y+0.5;// opencv 2.4.8 mark the first pixel as (0,0) which should be (0.5,0.5)  precisely
     key.angle= (it->angle)*PI/180;// opencv inverse the rotation in lower version of 2.4
     key.scale=it->size/2;
     F1.push_back(key);
@@ -71,7 +71,9 @@ int read_detectors(const std::string& filename ,  std::vector<cv::KeyPoint>& fea
   for (int i=0; i<size;i++){
     float x, y, angle, scale;
     file>>x>>y>>scale>>angle;   
-    cv::KeyPoint key(x,y,scale*2,angle*180/PI);
+	x-=0.5;// opencv 2.4.8 marks the first pixel as (0,0) which should be (0.5,0.5)  precisely
+    y-=0.5;
+	cv::KeyPoint key(x,y,scale*2,angle*180/PI);
     feat.push_back(key);
   }
 }
