@@ -71,8 +71,8 @@ int read_detectors(const std::string& filename ,  std::vector<cv::KeyPoint>& fea
   for (int i=0; i<size;i++){
     float x, y, angle, scale;
     file>>x>>y>>scale>>angle;   
-	x-=0.5;// opencv 2.4.8 marks the first pixel as (0,0) which should be (0.5,0.5)  precisely
-    y-=0.5;
+	x-=0.5;// opencv 2.4.8 marks the first pixel as (0,0) which should be (0.5,0.5)  precisely. 
+    y-=0.5;// here we are loading opencv features , where a -0.5 is assigned.
 	cv::KeyPoint key(x,y,scale*2,angle*180/PI);
     feat.push_back(key);
   }
