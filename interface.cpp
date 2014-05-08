@@ -25,7 +25,7 @@ the terms of the BSD license (see the COPYING file).
 int main(int argc,char*argv[]) {
   //================= load images ======================//
 	cv::Mat image1, image2;
-  int imageID=4;// index of a pair of images you want to use in folder demo_images
+  int imageID=2;// index of a pair of images you want to use in folder demo_images
   std::string index;
   std::stringstream f;
   f<<imageID;
@@ -42,11 +42,16 @@ int main(int argc,char*argv[]) {
  
 //=============== Read SIFT points =================//
   std::cout<<"Loading SIFT features"<<std::endl;
+  std::vector<keypoint> F1, F2;
+  read_detectors(output+"Detectors1.txt",F1);
+  read_detectors(output+"Detectors2.txt",F2);
+
   std::vector<cv::KeyPoint> feat1,feat2;
-  read_detectors(output+"Detectors1.txt",feat1);
-  read_detectors(output+"Detectors2.txt",feat2);
-  std::cout<< "sift:: 1st image: " << feat1.size() << " keypoints"<<std::endl;
-  std::cout<< "sift:: 2nd image: " << feat2.size() << " keypoints"<<std::endl;
+  Convert_detectors(F1,feat1);//we only need detectors for KVLD
+  Convert_detectors(F2,feat2);//we only need detectors for KVLD
+
+  std::cout<< "sift:: 1st image: " << F1.size() << " keypoints"<<std::endl;
+  std::cout<< "sift:: 2nd image: " << F1.size() << " keypoints"<<std::endl;
 //=============== compute matches using brute force matching ====================//
   std::vector<cv::DMatch> matches;
  read_matches(output+"initial_matches.txt",matches);
@@ -55,9 +60,8 @@ int main(int argc,char*argv[]) {
   Convert_image(image1, If1);
   Convert_image(image2, If2);
 
-  std::vector<keypoint> F1, F2;
-  Convert_detectors(feat1,F1);//we only need detectors for KVLD
-  Convert_detectors(feat2,F2);//we only need detectors for KVLD
+
+
   std::vector<Pair> matchesPair;
   Convert_matches(matches,matchesPair);
 

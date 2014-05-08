@@ -12,8 +12,6 @@ the terms of the BSD license (see the COPYING file).
 
 #include "convert.h"
 
-const float PI = 4.0 * atan(1.0f);
-
 int Convert_image(const cv::Mat& In, Image<float> & imag)//convert only gray scale image of opencv
 {
   unsigned char* pixelPtr = (unsigned char*) In.data;
@@ -54,13 +52,27 @@ int Convert_detectors(const  std::vector<cv::KeyPoint>& feat1,std::vector<keypoi
   }
   return 0;
 }
+
+int Convert_detectors(const  std::vector<keypoint>& F1,std::vector<cv::KeyPoint>& feat1){
+  feat1.clear();
+  for (std::vector<keypoint>::const_iterator it=F1.begin();it!=F1.end();it++){
+    cv::KeyPoint key;
+    key.pt.x=it->x-0.5;// opencv 2.4.8 mark the first pixel as (0,0) which should be (0.5,0.5)  precisely
+    key.pt.y=it->y-0.5;// opencv 2.4.8 mark the first pixel as (0,0) which should be (0.5,0.5)  precisely
+    key.angle= (it->angle)*180/PI;// opencv inverse the rotation in lower version of 2.4
+    key.size=it->scale*2;
+    feat1.push_back(key);
+  }
+  return 0;
+}
+
 int Convert_matches(const std::vector<cv::DMatch>& matches, std::vector<Pair>& matchesPair){
    for (std::vector<cv::DMatch>::const_iterator it=matches.begin();it!=matches.end();it++)
      matchesPair.push_back(Pair(it->queryIdx,it->trainIdx));
 return 0;
 }
 
-int read_detectors(const std::string& filename ,  std::vector<cv::KeyPoint>& feat){
+int read_detectors(const std::string& filename ,  std::vector<keypoint>& feat){
   std::ifstream file(filename.c_str());
   if (!file.is_open()){
     std::cout<<"error in reading detector files"<<std::endl;
@@ -69,11 +81,9 @@ int read_detectors(const std::string& filename ,  std::vector<cv::KeyPoint>& fea
   int size;
   file>>size;
   for (int i=0; i<size;i++){
-    float x, y, angle, scale;
-    file>>x>>y>>scale>>angle;   
-	x-=0.5;// opencv 2.4.8 marks the first pixel as (0,0) which should be (0.5,0.5)  precisely. 
-    y-=0.5;// here we are loading opencv features , where a -0.5 is assigned.
-	cv::KeyPoint key(x,y,scale*2,angle*180/PI);
+    
+	keypoint key;
+	readDetector(file,key);
     feat.push_back(key);
   }
 }
