@@ -51,7 +51,7 @@ int main(int argc,char*argv[]) {
   Convert_detectors(F2,feat2);//we only need detectors for KVLD
 
   std::cout<< "sift:: 1st image: " << F1.size() << " keypoints"<<std::endl;
-  std::cout<< "sift:: 2nd image: " << F1.size() << " keypoints"<<std::endl;
+  std::cout<< "sift:: 2nd image: " << F2.size() << " keypoints"<<std::endl;
 //=============== compute matches using brute force matching ====================//
   std::vector<cv::DMatch> matches;
  read_matches(output+"initial_matches.txt",matches);
