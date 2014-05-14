@@ -301,11 +301,10 @@ float KVLD(const Image<float>& I1,const Image<float>& I2,
 				}
 			}
 			//========substep 4: if geometric verification is set, re-score matches by geometric-consistency, and remove poorly scored ones ============================//
-			if (uniqueMatch && kvldParameters.geometry){
-				for (int i=0;i<size;i++) scoretable[i]=0;
+			if (kvldParameters.geometry){
+				scoretable.resize(size,0);
 
-				std::vector<bool> switching;
-				for (int i=0;i<size;i++) switching.push_back(false);
+				std::vector<bool> switching(size,false);
 
 				for (int it1=0; it1<size;it1++){
 					if (valide[it1]) {
@@ -339,7 +338,6 @@ float KVLD(const Image<float>& I1,const Image<float>& I2,
 			}
 		}
 		std::cout<<std::endl;
-
 
 		//=============== generating output list ===================//
 		for (int it=0; it<size;it++){
