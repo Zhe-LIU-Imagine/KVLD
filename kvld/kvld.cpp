@@ -187,8 +187,8 @@ float KVLD(const Image<float>& I1,const Image<float>& I2,
 
 		std::cout<<"Image scale-space complete..."<<std::endl;
 
-		float range1=getRange(I1,std::min(F1.size(),matches.size()),kvldParameters.inlierRate);
-		float range2=getRange(I2,std::min(F2.size(),matches.size()),kvldParameters.inlierRate);
+		float range1=getRange(I1,std::min(F1.size(),matches.size()),kvldParameters.inlierRate,kvldParameters.rang_ratio);
+		float range2=getRange(I2,std::min(F2.size(),matches.size()),kvldParameters.inlierRate,kvldParameters.rang_ratio);
 
 		size_t size=matches.size();
 
@@ -230,18 +230,22 @@ float KVLD(const Image<float>& I1,const Image<float>& I2,
 							float dist1=point_distance(F1[a1],F1[a2]);
 							float dist2=point_distance(F2[b1],F2[b2]);
 							if ( dist1>min_dist && dist2>min_dist
-								&& (dist1<range1 || dist2<range2)){
+								&& (dist1<range1 || dist2<range2))
+							{
 
-									if(E(it1,it2)==-1){//update E if unknow
+									if(E(it1,it2)==-1) //update E if unknow
+									{
 										E(it1,it2)=-2; E(it2,it1)=-2;
 
-										if(!kvldParameters.geometry || consistent(F1[a1],F1[a2],F2[b1],F2[b2])<distance_thres){
+										if(!kvldParameters.geometry || consistent(F1[a1],F1[a2],F2[b1],F2[b2])<distance_thres)
+										{
 											VLD vld1(Chaine1,F1[a1],F1[a2]);
 											VLD vld2(Chaine2,F2[b1],F2[b2]);
 											//vld1.test();
 											double error=vld1.difference(vld2);
 											//std::cout<<std::endl<<it1<<" "<<it2<<" "<<dist1(a1,a2)<<" "<< dist2(b1,b2)<<" "<<error<<std::endl;
-											if (error<juge){
+											if (error<juge)
+											{
 												E(it1,it2)=(float)error;
 												E(it2,it1)=(float)error;
 												//std::cout<<E(it2,it1)<<std::endl;
@@ -249,7 +253,8 @@ float KVLD(const Image<float>& I1,const Image<float>& I2,
 										}
 									}
 
-									if(E(it1,it2)>=0) {
+									if(E(it1,it2)>=0) 
+									{
 										result[it1]+=1;
 										result[it2]+=1;
 										scoretable[it1]+=double(E(it1,it2));

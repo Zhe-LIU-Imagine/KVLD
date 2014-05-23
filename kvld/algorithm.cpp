@@ -22,8 +22,8 @@ IntegralImages::IntegralImages(const Image<float>& I){
 			}
 	}
 
-float getRange(const Image<float>& I,int a,const float p){
-  float range=sqrt(float(3*I.Height()*I.Width())/(p*a*PI));
+float getRange(const Image<float>& I,int a,const float p, const float ratio){
+  float range=ratio*sqrt(float(3*I.Height()*I.Width())/(p*a*PI));
   std::cout<<"range ="<<range<<std::endl;
   return range;
 }

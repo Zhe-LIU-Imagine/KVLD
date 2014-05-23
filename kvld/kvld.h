@@ -43,7 +43,8 @@ struct KvldParameters{
   float inlierRate;
   size_t K;
   bool geometry;
-  KvldParameters(): inlierRate(0.04),K(3),geometry(true){};
+  float rang_ratio;
+  KvldParameters(): inlierRate(0.04),K(3),geometry(true),rang_ratio(1.0){};
 };
 
 //====== Pyramide of scale images ======//

@@ -237,6 +237,6 @@ inline float consistent(const T& a1,const T& a2,const T& b1,const T& b2){
 	float d=std::min(d1_error/std::min(d1,point_distance(b1,b2)),d2_error/std::min(d2,point_distance(b1,b2)));
 	return d;
 }
-float getRange(const Image<float>& I,int a,const float p);
+float getRange(const Image<float>& I,int a,const float p,const float ratio);
 
 #endif //KVLD_ALGORITHM_H

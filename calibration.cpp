@@ -43,32 +43,37 @@ int main(int argc,char*argv[]) {
 	std::cout<<"Extracting SIFT features"<<std::endl;
 	std::vector<cv::KeyPoint> feat1,feat2;
 
-	cv::SiftFeatureDetector* detectortype=new  cv::SiftFeatureDetector() ;
-	cv::PyramidAdaptedFeatureDetector detector2(detectortype,3);// 3 levels of image scale
+	//cv::SiftFeatureDetector* detectortype=new  cv::SiftFeatureDetector() ;
+	//cv::PyramidAdaptedFeatureDetector detector2(detectortype,3);// 3 levels of image scale
+	cv::SIFT detector(0,5);
+
 	cv::SiftDescriptorExtractor extractor;
 	cv::Mat descriptors1,descriptors2;
 
-	detector2.detect(image1,feat1);
+	detector.detect(image1,feat1);
 	extractor.compute(image1,feat1,descriptors1);
 	std::cout<< "sift:: 1st image: " << feat1.size() << " keypoints"<<std::endl;
 
-	detector2.detect(image2,feat2);
+	detector.detect(image2,feat2);
 	extractor.compute(image2,feat2,descriptors2);
 	std::cout<< "sift:: 2nd image: " << feat2.size() << " keypoints"<<std::endl;
 
 	//=============== compute matches using brute force matching ====================//
 	std::vector<cv::DMatch> matches;
-	bool bSymmetricMatches = false;
+	bool bSymmetricMatches = false;//caution, activate this with knn matching will cause errors.
 	cv::BFMatcher matcher(cv::NORM_L2, bSymmetricMatches);
-	//matcher.match(descriptors1,descriptors2,matches);
-
-	std::vector<std::vector<cv::DMatch>> knnmatches;
-	matcher.knnMatch(descriptors1,descriptors2,knnmatches,2);
-	for (std::vector<std::vector<cv::DMatch>>::const_iterator it=knnmatches.begin();it!=knnmatches.end();it++){
-		if (it->at(0).distance<sift_matching_criterion*it->at(1).distance) 
-			matches.push_back((*it)[0]);
+	if (bSymmetricMatches){
+		matcher.match(descriptors1,descriptors2,matches);
 	}
-
+	else
+	{
+		std::vector<std::vector<cv::DMatch>> knnmatches;
+		matcher.knnMatch(descriptors1,descriptors2,knnmatches,2);
+		for (std::vector<std::vector<cv::DMatch>>::const_iterator it=knnmatches.begin();it!=knnmatches.end();it++){
+			if (it->at(0).distance<sift_matching_criterion*it->at(1).distance) 
+				matches.push_back((*it)[0]);
+		}
+	}
 	//=============== convert openCV sturctures to KVLD recognized elements
 	Image<float> If1, If2;
 	Convert_image(image1, If1);
@@ -96,8 +101,9 @@ int main(int argc,char*argv[]) {
 
 	while (it_num < 5 && kvldparameters.inlierRate>KVLD(If1, If2,F1,F2, matchesPair, matchesFiltered, vec_score,E,valide,kvldparameters)) {
 		kvldparameters.inlierRate/=2;
+		kvldparameters.rang_ratio=2;
 		std::cout<<"low inlier rate, re-select matches with new rate="<<kvldparameters.inlierRate<<std::endl;
-		kvldparameters.K=2;
+		//kvldparameters.K=2;
 		it_num++;
 	}
 	std::cout<<"K-VLD filter ends with "<<matchesFiltered.size()<<" selected matches"<<std::endl;
