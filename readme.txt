@@ -8,9 +8,10 @@ Z,Liu and R,Marlet. Virtual Line Descriptor and Semi-Local Matching Method for R
 
   KVLD is distributed under the BSD license (see the COPYING file).
 
-PERFORMANCE WARMING: 
-  1. If you use openCV library, please download the last version from GitHub, for openCV of version earlier than 2.4, descriptors' orientation may be reversed! (Bug in openCV 2.3) An easy way to test is to process an image with its rotated projection.
-  2. We use integral image instead of Gaussian blurring process to calculate gradients, which is less discriminant but is easier and faster in practice 
+PERFORMANCE WARMING:
+  1. Some Linux setup may suffer performance degradation, one way to test is to use provided image pair 2, the algorithm should generate 358 matches. The best way is to compare result under windows.
+  2. If you use openCV library, please download the last version from GitHub, for openCV of version earlier than 2.4, descriptors' orientation may be reversed! (Bug in openCV 2.3) An easy way to test is to process an image with its rotated projection.
+  3. We use integral image instead of Gaussian blurring process to calculate gradients, which is less discriminant but is easier and faster in practice 
 
 INSTALLING
   This implementation is on C++ and depends on openCV library, whose installation guild is available online. You will need Cmake 2.6 or later to compile the program.
