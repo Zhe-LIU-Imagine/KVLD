@@ -229,11 +229,11 @@ inline float consistent(const T& a1,const T& a2,const T& b1,const T& b2){
 
 	float ax2=float(cos(angle2)*ax-sin(angle2)*ay);
 	ax2*=float(b2.scale/a2.scale);
-
 	float ay2=float(sin(angle2)*ax+cos(angle2)*ay);
 	ay2*=float(b2.scale/a2.scale);
 	float d2=sqrt(ax2*ax2+ay2*ay2);
 	float d2_error=sqrt((ax2-bx)*(ax2-bx)+(ay2-by)*(ay2-by));
+
 	float d=std::min(d1_error/std::min(d1,point_distance(b1,b2)),d2_error/std::min(d2,point_distance(b1,b2)));
 	return d;
 }

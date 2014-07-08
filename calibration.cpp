@@ -101,9 +101,9 @@ int main(int argc,char*argv[]) {
 
 	while (it_num < 5 && kvldparameters.inlierRate>KVLD(If1, If2,F1,F2, matchesPair, matchesFiltered, vec_score,E,valide,kvldparameters)) {
 		kvldparameters.inlierRate/=2;
-		kvldparameters.rang_ratio=2;
+		kvldparameters.rang_ratio=sqrt(2.0f);
 		std::cout<<"low inlier rate, re-select matches with new rate="<<kvldparameters.inlierRate<<std::endl;
-		//kvldparameters.K=2;
+		kvldparameters.K=2;
 		it_num++;
 	}
 	std::cout<<"K-VLD filter ends with "<<matchesFiltered.size()<<" selected matches"<<std::endl;
