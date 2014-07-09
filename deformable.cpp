@@ -97,7 +97,7 @@ int main(int argc,char*argv[]) {
 		kvldparameters.inlierRate/=2;
 		kvldparameters.rang_ratio=sqrt(2.0f);
 		std::cout<<"low inlier rate, re-select matches with new rate="<<kvldparameters.inlierRate<<std::endl;
-		kvldparameters.K=2;
+		if (matchesFiltered.size()==0) kvldparameters.K=2;
 		it_num++;
 	}
 	std::cout<<"K-VLD filter ends with "<<matchesFiltered.size()<<" selected matches"<<std::endl;
