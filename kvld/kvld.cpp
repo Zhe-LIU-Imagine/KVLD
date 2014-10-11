@@ -403,10 +403,9 @@ void writeResult(const std::string output,const std::vector<keypoint>& F1,const 
    std::ofstream kvldScore((output+"kvld_matches_score.txt"));
     if (!kvldScore.is_open())
       std::cout<<"error while writing kvld_matches_score.txt"<<std::endl;
-    
+	
     for (std::vector<double>::const_iterator it=score.begin(); it!=score.end();it++){
-        filteredmatches<<*it<<std::endl;
-        
+        kvldScore<<*it<<std::endl;   
     }
    kvldScore.close();
 }

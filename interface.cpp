@@ -72,6 +72,7 @@ int main(int argc,char*argv[]) {
 	//In order to illustrate the gvld(or vld)-consistant neighbors, the following two parameters has been externalized as inputs of the function KVLD.
 	libNumerics::matrix<float> E = libNumerics::matrix<float>::ones(matches.size(),matches.size())*(-1);
 	// gvld-consistency matrix, intitialized to -1,  >0 consistency value, -1=unknow, -2=false  
+
 	std::vector<bool> valide(matches.size(), true);// indices of match in the initial matches, if true at the end of KVLD, a match is kept.
 
 	size_t it_num=0;
@@ -126,7 +127,7 @@ int main(int argc,char*argv[]) {
 	//draw gvld-consistant neighbors (not exhostive)
 	for (int it1=0; it1<matchesPair.size()-1;it1++){
 		for (int it2=it1+1; it2<matchesPair.size();it2++){
-			if (valide[it1] && valide[it2] && E(it1,it2)>=0){
+			if (valide[it1] && valide[it2] && E(it1,it2)>=0 ){
 
 				cv::KeyPoint l1 = feat1[matchesPair[it1].first];
 				cv::KeyPoint l2 = feat1[matchesPair[it2].first];
