@@ -23,6 +23,8 @@ the terms of the BSD license (see the COPYING file).
 
 const float sift_matching_criterion=0.98;
 int main(int argc,char*argv[]) {
+	std::cout<<"Warming: K-VLD may suffer performance degradation under Linux OS!"<<std::endl
+	<<"Please first check existing result in the output folder as a reference!"<<std::endl;
 	//================= load images ======================//
 	cv::Mat image1, image2;
 	int imageID=4;// index of a pair of images you want to use in folder demo_images
