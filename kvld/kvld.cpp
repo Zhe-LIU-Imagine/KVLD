@@ -79,7 +79,7 @@ int ImageScale::getIndex(const double r)const{
 				index++;
 				range_low*=step;
 			}
-			return index;
+			return std::min(int(angles.size()-1), index);
 		}
 	}
 
