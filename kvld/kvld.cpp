@@ -178,7 +178,9 @@ VLD::VLD(const ImageScale& series, T const& P1, T const& P2) : contrast(0.0) {
 
 float KVLD(const Image<float>& I1,const Image<float>& I2,
 	std::vector<keypoint>& F1, std::vector<keypoint>& F2,const std::vector<Pair>& matches,
-	std::vector<Pair>& matchesFiltered,std::vector<double>& score,libNumerics::matrix<float>& E,std::vector<bool>& valide, KvldParameters& kvldParameters){
+	std::vector<Pair>& matchesFiltered,std::vector<double>& score,
+	std::vector<std::vector<float>>& E,
+	std::vector<bool>& valide, KvldParameters& kvldParameters){
 		matchesFiltered.clear();
 		score.clear();
 
@@ -233,9 +235,9 @@ float KVLD(const Image<float>& I1,const Image<float>& I2,
 								&& (dist1<range1 || dist2<range2))
 							{
 
-									if(E(it1,it2)==-1) //update E if unknow
+									if(E[it1][it2]==-1) //update E if unknow
 									{
-										E(it1,it2)=-2; E(it2,it1)=-2;
+										E[it1][it2]=-2; E[it2][it1]=-2;
 
 										if(!kvldParameters.geometry || consistent(F1[a1],F1[a2],F2[b1],F2[b2])<distance_thres)
 										{
@@ -246,19 +248,19 @@ float KVLD(const Image<float>& I1,const Image<float>& I2,
 											//std::cout<<std::endl<<it1<<" "<<it2<<" "<<dist1(a1,a2)<<" "<< dist2(b1,b2)<<" "<<error<<std::endl;
 											if (error<juge)
 											{
-												E(it1,it2)=(float)error;
-												E(it2,it1)=(float)error;
+												E[it1][it2]=(float)error;
+												E[it2][it1]=(float)error;
 												//std::cout<<E(it2,it1)<<std::endl;
 											}
 										}
 									}
 
-									if(E(it1,it2)>=0) 
+									if(E[it1][it2]>=0) 
 									{
 										result[it1]+=1;
 										result[it2]+=1;
-										scoretable[it1]+=double(E(it1,it2));
-										scoretable[it2]+=double(E(it1,it2));
+										scoretable[it1]+=double(E[it1][it2]);
+										scoretable[it2]+=double(E[it1][it2]);
 										if (result[it1]>=max_connection)
 											break;
 									}

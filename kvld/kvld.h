@@ -150,7 +150,7 @@ public:
 //        otherwise, it presents the average photometric consistency score with its neighbor matches.
 //
 //E: gvld(or vld)-consistency matrix, for illustration reason, it has been externalized as an input of KVLD. it should be initialized to be a matches.size*matche.sizes table with all equal to -1 
-//   e.g.  libNumerics::matrix<int> E = libNumerics::matrix<int>::ones(matchesPair.size(),matchesPair.size())*(-1);
+//   e.g. std::vector<std::vector<float>> E(matches.size(), std::vector<float>( matches.size(), -1));
 //
 //valide: indices of whether the i th match in the initial match list is selected, for illustration reason, it has been externalized as an input of KVLD. it should be initialized to be a 
 //    matches.size vector with all equal to true.  e.g.  std::vector<bool> valide(size, true);
@@ -159,7 +159,7 @@ public:
 
 float KVLD(const Image<float>& I1,const Image<float>& I2,
 	 std::vector<keypoint>& F1, std::vector<keypoint>& F2,const std::vector<Pair>& matches,
-	std::vector<Pair>& matchesFiltered,std::vector<double>& score,libNumerics::matrix<float>& E,std::vector<bool>& valide,KvldParameters& kvldParameters);
+	std::vector<Pair>& matchesFiltered,std::vector<double>& score, std::vector<std::vector<float>>& E,std::vector<bool>& valide,KvldParameters& kvldParameters);
 
 //====================KVLD interface======================//
 void writeResult(const std::string output,const std::vector<keypoint>& F1,const std::vector<keypoint>& F2,const std::vector<Pair>& matches,

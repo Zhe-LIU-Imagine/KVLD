@@ -15,11 +15,21 @@ the terms of the BSD license (see the COPYING file).
 
 #include "kvld/kvld.h"
 #include "convert.h"
+#include <vector>
 
-#include <cv.hpp>
-#include <cxcore.h>
-#include <highgui.h>
-#include "opencv2/nonfree/features2d.hpp" 
+#include "opencv2/opencv.hpp"
+#include "opencv2/features2d.hpp"
+
+#include "opencv2/calib3d.hpp"
+
+#include "opencv2/core.hpp"
+#include "opencv2/imgcodecs.hpp"
+#include "opencv2/highgui.hpp"
+
+#include "opencv2/xfeatures2d.hpp"
+#include "opencv2/xfeatures2d/nonfree.hpp"
+
+using namespace cv::xfeatures2d;
 
 const float sift_matching_criterion=0.98;
 int main(int argc,char*argv[]) {
@@ -33,27 +43,29 @@ int main(int argc,char*argv[]) {
 	f<<imageID;
 	f>>index;
 	std::string input=std::string(SOURCE_DIR)+"/demo_image/IMG_";
-	image1= cv::imread(input+index+".jpg", CV_LOAD_IMAGE_GRAYSCALE);
-	image2= cv::imread(input+index+"bis.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	image1= cv::imread(input+index+".jpg", cv::IMREAD_GRAYSCALE);
+	image2= cv::imread(input+index+"bis.jpg", cv::IMREAD_GRAYSCALE);
 
 	cv::Mat image1color, image2color, concat;//for visualization
-	image1color= cv::imread(input+index+".jpg", CV_LOAD_IMAGE_COLOR);
-	image2color= cv::imread(input+index+"bis.jpg", CV_LOAD_IMAGE_COLOR);
+	image1color= cv::imread(input+index+".jpg", cv::IMREAD_COLOR);
+	image2color= cv::imread(input+index+"bis.jpg", cv::IMREAD_COLOR);
+
+	std::cout << image1color.rows << " " << image1color.cols << std::endl;
+	std::cout << image2color.rows << " " << image2color.cols << std::endl;
 	//=============== compute SIFT points =================//
 	std::cout<<"Extracting SIFT features"<<std::endl;
 	std::vector<cv::KeyPoint> feat1,feat2;
 
-	cv::SIFT detector;//default setting is ok, 5 levels generate too much features
-
-	cv::SiftDescriptorExtractor extractor;
+	cv::Ptr<SURF> detector = SURF::create(15,1);//default setting is ok, 5 levels generate too much features
+	cv::Ptr<SURF> extractor= SURF::create();
 	cv::Mat descriptors1,descriptors2;
 
-	detector.detect(image1,feat1);
-	extractor.compute(image1,feat1,descriptors1);
+	detector->detect(image1,feat1);
+	extractor->compute(image1,feat1,descriptors1);
 	std::cout<< "sift:: 1st image: " << feat1.size() << " keypoints"<<std::endl;
 
-	detector.detect(image2,feat2);
-	extractor.compute(image2,feat2,descriptors2);
+	detector->detect(image2,feat2);
+	extractor->compute(image2,feat2,descriptors2);
 	std::cout<< "sift:: 2nd image: " << feat2.size() << " keypoints"<<std::endl;
 	//=============== compute matches using brute force matching ====================//
 	std::vector<cv::DMatch> matches;
@@ -89,11 +101,11 @@ int main(int argc,char*argv[]) {
 	std::vector<double> vec_score;
 
 	//In order to illustrate the gvld(or vld)-consistant neighbors, the following two parameters has been externalized as inputs of the function KVLD.
-	libNumerics::matrix<float> E = libNumerics::matrix<float>::ones(matches.size(),matches.size())*(-1);
+	std::vector<std::vector<float>> E(matches.size(), std::vector<float>( matches.size(), -1));
 	// gvld-consistency matrix, intitialized to -1, >0 consistency value, -1=unknow, -2=false  
 
 	std::vector<bool> valide(matches.size(), true);// indices of match in the initial matches, if true at the end of KVLD, a match is kept.
-
+	clock_t tic = clock();
 	size_t it_num=0;
 	KvldParameters kvldparameters;//initial parameters of KVLD
 	while (it_num < 5 && kvldparameters.inlierRate>KVLD(If1, If2,F1,F2, matchesPair, matchesFiltered, vec_score,E,valide,kvldparameters)) {
@@ -103,7 +115,9 @@ int main(int argc,char*argv[]) {
 		if (matchesFiltered.size()==0) kvldparameters.K=2;
 		it_num++;
 	}
-	std::cout<<"K-VLD filter ends with "<<matchesFiltered.size()<<" selected matches"<<std::endl;
+	float time_passed = ((float)clock() - tic) / CLOCKS_PER_SEC;
+
+	std::cout<<"K-VLD filter ends with "<<matchesFiltered.size()<<" selected matches, time = "<< time_passed<<std::endl;
 
 
 	//================= write files to output folder ==================//
@@ -113,7 +127,7 @@ int main(int argc,char*argv[]) {
 	//================= Visualize matching result ====================//
 
 	cv::vconcat(image1color, image2color,concat);
-	for(  std::vector<cv::DMatch>::const_iterator ptr = matches.begin(); ptr != matches.end(); ++ptr)
+	for(  std::vector<cv::DMatch>::const_iterator ptr = matches.begin(); ptr != matches.end(); ptr++)
 	{
 		cv::KeyPoint start = feat1[ptr->queryIdx]; 
 		cv::KeyPoint end = feat2[ptr->trainIdx];
@@ -128,7 +142,7 @@ int main(int argc,char*argv[]) {
 	//draw gvld-consistant neighbors (not exhostive)
 	for (int it1=0; it1<matchesPair.size()-1;it1++){
 		for (int it2=it1+1; it2<matchesPair.size();it2++){
-			if (valide[it1] && valide[it2] &&  E(it1,it2)>=0){
+			if (valide[it1] && valide[it2] &&  E[it1][it2]>=0){
 
 				cv::KeyPoint l1 = feat1[matchesPair[it1].first];
 				cv::KeyPoint l2 = feat1[matchesPair[it2].first];

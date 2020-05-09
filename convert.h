@@ -12,10 +12,13 @@ the terms of the BSD license (see the COPYING file).
 #ifndef CONVERT_H
 #define CONVERT_H
 #include <vector>
-#include <cv.hpp>
+#include "opencv2/opencv.hpp"
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
 
-#include "demo/libImage/image.hpp"
-#include "extras/sift/demo_lib_sift.h"
+
+//#include "demo/libImage/image.hpp"
+
 #include "kvld/algorithm.h"
 
 typedef std::pair<size_t,size_t> Pair;

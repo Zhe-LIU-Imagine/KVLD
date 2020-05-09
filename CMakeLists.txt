@@ -41,22 +41,22 @@ ADD_SUBDIRECTORY(OrsaHomography)
 ADD_SUBDIRECTORY(kvld)
 
 INCLUDE_DIRECTORIES(
-./OrsaHomography/
+#./OrsaHomography/
 ./OrsaHomography/demo/libImage
 $ENV{OPENCV_DIR}/install/include/opencv
 )
 
 
 ADD_EXECUTABLE(KVLD_Deformable deformable.cpp convert.h convert.cpp )
-TARGET_LINK_LIBRARIES(KVLD_Deformable kvld image sift Orsa
+TARGET_LINK_LIBRARIES(KVLD_Deformable kvld image 
 ${OpenCV_LIBS})
 
 ADD_EXECUTABLE(KVLD_Calibration calibration.cpp convert.h convert.cpp)
-TARGET_LINK_LIBRARIES(KVLD_Calibration kvld image sift Orsa
+TARGET_LINK_LIBRARIES(KVLD_Calibration kvld image 
 ${OpenCV_LIBS})
 
 ADD_EXECUTABLE(KVLD_Interface interface.cpp convert.h convert.cpp)
-TARGET_LINK_LIBRARIES(KVLD_Interface kvld image sift Orsa
+TARGET_LINK_LIBRARIES(KVLD_Interface kvld image 
 ${OpenCV_LIBS})
 
 

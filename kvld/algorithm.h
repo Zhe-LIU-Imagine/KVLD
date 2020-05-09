@@ -22,15 +22,17 @@ the terms of the BSD license (see the COPYING file).
 #include <algorithm>
 #include <functional>
 
-#include "demo/libImage/image.hpp"
-#include "extras/sift/demo_lib_sift.h"
-#include "extras/libNumerics/numerics.h"
-#include "extras/libMatch/match.h"
+#include "image.hpp"
+#include "matrix.h"
+//#include "extras/libNumerics/numerics.h"
+#include "match.h"
 
-#include "libOrsa/homography_model.hpp"
-#include "libOrsa/fundamental_model.hpp"
+//#include "libOrsa/homography_model.hpp"
+//#include "libOrsa/fundamental_model.hpp"
 
-
+struct keypoint {
+	float x, y, scale, angle;
+};
 
 
 typedef libNumerics::matrix<double> Matrix;
@@ -122,18 +124,7 @@ private :
 static void display_stats(const std::vector<Match>& vec_matchings,
   const std::vector<size_t>& vec_inliers, libNumerics::matrix<double>& F, bool homography);
 
-// Remove multiple "same position" matches
-template <typename T>
-static void rm_duplicates(T& m);
 
-bool ORSA(const std::vector<Match>& vec_matchings, int w1,int h1, int w2,int h2,
-          double& precision,
-          libNumerics::matrix<double>& H, std::vector<size_t>& vec_inliers,bool homo=true);
-
-
-FCrit Find_Model(const Image<float>& I1,const Image<float>& I2,
-	const std::vector<keypoint>& F1,const std::vector<keypoint>& F2,
-			const std::vector<Pair>& matches,double& precision, bool homograghy=true);
 
 //=============================IO interface, convertion of object types======================//
 

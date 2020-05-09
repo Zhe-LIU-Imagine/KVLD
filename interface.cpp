@@ -16,10 +16,19 @@ the terms of the BSD license (see the COPYING file).
 #include "kvld/kvld.h"
 #include "convert.h"
 
-#include <cv.hpp>
-#include <cxcore.h>
-#include <highgui.h>
-#include "opencv2/nonfree/features2d.hpp" 
+
+#include "opencv2/opencv.hpp"
+#include <vector>
+
+#include "opencv2/opencv.hpp"
+#include "opencv2/features2d.hpp"
+
+#include "opencv2/calib3d.hpp"
+
+#include "opencv2/core.hpp"
+#include "opencv2/imgcodecs.hpp"
+#include "opencv2/highgui.hpp"
+//#include "opencv2/nonfree/features2d.hpp" 
 
 
 int main(int argc,char*argv[]) {
@@ -35,12 +44,12 @@ int main(int argc,char*argv[]) {
 	std::string input=std::string(SOURCE_DIR)+"/demo_image/IMG_";
 	std::string output=std::string(SOURCE_DIR)+"/demo_output/IMG_"+index+"_";
 
-	image1= cv::imread(input+index+".jpg", CV_LOAD_IMAGE_GRAYSCALE);
-	image2= cv::imread(input+index+"bis.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	image1= cv::imread(input+index+".jpg", cv::IMREAD_GRAYSCALE);
+	image2= cv::imread(input+index+"bis.jpg", cv::IMREAD_GRAYSCALE);
 
 	cv::Mat image1color, image2color, concat;//for visualization
-	image1color= cv::imread(input+index+".jpg", CV_LOAD_IMAGE_COLOR);
-	image2color= cv::imread(input+index+"bis.jpg", CV_LOAD_IMAGE_COLOR);
+	image1color= cv::imread(input+index+".jpg", cv::IMREAD_COLOR);
+	image2color= cv::imread(input+index+"bis.jpg", cv::IMREAD_COLOR);
 
 	//=============== Read SIFT points =================//
 	std::cout<<"Loading SIFT features"<<std::endl;
@@ -72,7 +81,8 @@ int main(int argc,char*argv[]) {
 	std::vector<double> vec_score;
 
 	//In order to illustrate the gvld(or vld)-consistant neighbors, the following two parameters has been externalized as inputs of the function KVLD.
-	libNumerics::matrix<float> E = libNumerics::matrix<float>::ones(matches.size(),matches.size())*(-1);
+	//libNumerics::matrix<float> E = libNumerics::matrix<float>::ones(matches.size(),matches.size())*(-1);
+	std::vector<std::vector<float>> E(matches.size(), std::vector<float>(matches.size(), -1));
 	// gvld-consistency matrix, intitialized to -1,  >0 consistency value, -1=unknow, -2=false  
 
 	std::vector<bool> valide(matches.size(), true);// indices of match in the initial matches, if true at the end of KVLD, a match is kept.
@@ -129,7 +139,7 @@ int main(int argc,char*argv[]) {
 	//draw gvld-consistant neighbors (not exhostive)
 	for (int it1=0; it1<matchesPair.size()-1;it1++){
 		for (int it2=it1+1; it2<matchesPair.size();it2++){
-			if (valide[it1] && valide[it2] && E(it1,it2)>=0 ){
+			if (valide[it1] && valide[it2] && E[it1][it2]>=0 ){
 
 				cv::KeyPoint l1 = feat1[matchesPair[it1].first];
 				cv::KeyPoint l2 = feat1[matchesPair[it2].first];
